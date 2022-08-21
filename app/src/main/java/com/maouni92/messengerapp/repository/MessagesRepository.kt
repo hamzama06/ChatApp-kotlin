@@ -57,13 +57,13 @@ class MessagesRepository(val context: Context) {
 
     private val usersRef = FirebaseInstances.usersRef
 
-    private lateinit var chatsRegistration: ListenerRegistration
-    private lateinit var messagesRegistration: ListenerRegistration
-    private lateinit var friendChangesRegistration:ListenerRegistration
+    private  var chatsRegistration: ListenerRegistration? = null
+    private  var messagesRegistration: ListenerRegistration? = null
+    private  var friendChangesRegistration:ListenerRegistration? = null
 
-    private lateinit var _friendName:String
-    private lateinit var _friendImageUrl:String
-    private lateinit var _friendId: String
+   // private lateinit var _friendName:String
+    //private lateinit var _friendImageUrl:String
+   // private lateinit var _friendId: String
 
     fun getAllChats(){
         chatsRegistration =   usersRef.document(currentUser.uid).collection("chats").addSnapshotListener { value, error ->
@@ -87,7 +87,7 @@ class MessagesRepository(val context: Context) {
 
     fun cancelChatsRegistration(){
 
-        chatsRegistration.remove()
+        chatsRegistration?.remove()
     }
 
     fun getAllMessages(friendId:String){
@@ -113,7 +113,10 @@ class MessagesRepository(val context: Context) {
     }
 
 
-    fun sendNewMessage(messageContent:String,userName:String, userImageUrl:String, type:String, recyclerView: RecyclerView){
+    fun sendNewMessage(messageContent:String,userName:String,
+                       userImageUrl:String,friendId:String,
+                       friendName:String, friendImageUrl:String,
+                       type:String, recyclerView: RecyclerView){
         val simpleDateFormat = SimpleDateFormat("EEE,MMM dd,yyyy,HH:mm", Locale.US)
         val date = simpleDateFormat.format(Date())
 
@@ -121,8 +124,8 @@ class MessagesRepository(val context: Context) {
         val time = System.currentTimeMillis()
 
 
-        val message = Message("", messageContent, currentUser.uid, currentUser.uid, _friendId, _friendName, _friendImageUrl, type, date,time)
-        val messageQuery = messagesRef.document(currentUser.uid).collection(_friendId)
+        val message = Message("", messageContent, currentUser.uid, currentUser.uid, friendId, friendName, friendImageUrl, type, date,time)
+        val messageQuery = messagesRef.document(currentUser.uid).collection(friendId)
 
         //   messagesAdapter.add(message)
 
@@ -132,22 +135,20 @@ class MessagesRepository(val context: Context) {
 
             it.update("messageId", message.messageId)
 
-           usersRef.document(currentUser.uid).collection("chats").document(_friendId).set(message).addOnSuccessListener {
+           usersRef.document(currentUser.uid).collection("chats").document(friendId).set(message).addOnSuccessListener {
 
             }
             recyclerView.smoothScrollToPosition(messagesList.size-1)
-            message.userId = _friendId
+            message.userId = friendId
             message.friendId = currentUser.uid
             message.friendName = userName
             message.friendImageUrl = userImageUrl
-           messagesRef.document(_friendId).collection(currentUser.uid).add(message)
-            usersRef.document(_friendId).collection("chats").document(currentUser.uid).set(message).addOnSuccessListener {
+           messagesRef.document(friendId).collection(currentUser.uid).add(message)
+            usersRef.document(friendId).collection("chats").document(currentUser.uid).set(message).addOnSuccessListener {
 
             }
 
             if (isReceiverAvailable.value == false){
-
-                Log.d("ChatroomActivity", "//////////////////// friend not available - send him a notification")
 
                 try {
                     val tokens = JSONArray()
@@ -173,39 +174,30 @@ class MessagesRepository(val context: Context) {
 
     private fun sendNotification(messageBody: String){
 
-        Log.d("ChatroomActivity", "//////////////////// inside sendNotification func : message : $messageBody")
         ApiClient.getClient.create(ApiService::class.java).sendMessage(
             Constants.getRemoteMessageHeader,
             messageBody
         ).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful){
-                    Log.d("ChatroomActivity", "//////////////////// notify response is successful")
                     try {
                         if (response.body() != null){
 
-                            Log.d("ChatroomActivity", "//////////////////// notify body is not null")
                             val responseJson = JSONObject(response.body()!!)
                             val results = responseJson.getJSONArray("results")
                             if (responseJson.getInt("failure") == 1){
-                                var error:JSONObject = results.get(0) as JSONObject
                                 return
                             }
 
                         }
                     }catch (e: JSONException){
-                        Log.d("Chatroom Activity", "/////////// notification exception : ${e.message}" )
+                        Log.d("Messages repository", "/////////// notification exception : ${e.message}" )
                     }
 
-
-                    Log.d("Chatroom Activity", "/////////// notification sent" )
-                }else{
-                    Log.d("Chatroom Activity", "/////////// notification failed" )
                 }
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("Chatroom Activity", "/////////// notification fail : ${t.message}" )
 
             }
 
@@ -214,7 +206,10 @@ class MessagesRepository(val context: Context) {
 
     }
 
-    fun sendImage(uri: Uri,userName:String, userImageUrl:String, recyclerView: RecyclerView){
+    fun sendImage(uri: Uri,userName:String,
+                  userImageUrl:String,friendId:String,
+                  friendName:String, friendImageUrl:String,
+                  recyclerView: RecyclerView){
 
         val imageBitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
         val outputStream = ByteArrayOutputStream()
@@ -225,7 +220,7 @@ class MessagesRepository(val context: Context) {
             if (task.isSuccessful){
                 ref.downloadUrl.addOnSuccessListener {
 
-                    sendNewMessage(it.toString(),userName, userImageUrl, MessageType.IMAGE, recyclerView)
+                    sendNewMessage(it.toString(),userName, userImageUrl,friendId, friendName, friendImageUrl, MessageType.IMAGE, recyclerView)
 
                 }}
         }
@@ -235,22 +230,17 @@ class MessagesRepository(val context: Context) {
     fun deleteMessage(itemPosition:Int){
 
         val message = messagesList[itemPosition]
-
-        Log.d("Message repository", "/////////// message in position: $itemPosition" )
-        Log.d("Message repository", "/////////// message deleted: ${message.message}" )
-        Log.d("Message repository", "/////////// message deleted id: ${message.messageId}" )
+         var friendId = message.friendId
         messagesList.removeAt(itemPosition)
         messagesRef.document(message.userId!!)
-            .collection(_friendId).document(message.messageId!!).delete().addOnCompleteListener {
+            .collection(friendId!!).document(message.messageId!!).delete().addOnCompleteListener {
                 if (it.isSuccessful){
-                    Log.d("Message repository", "/////////// message in position: $itemPosition was deleted" )
-                    Log.d("Message repository", "/////////// list count after deleting : ${messagesList.size}")
                     if (messagesList.isEmpty()){
 
-                      usersRef.document(message.userId!!).collection("chats").document(_friendId).delete()
+                      usersRef.document(message.userId!!).collection("chats").document(friendId!!).delete()
                     }else if (itemPosition == messagesList.size ){
                         val lastMessage = messagesList.last()
-                       usersRef.document(message.userId!!).collection("chats").document(_friendId).set(lastMessage)
+                       usersRef.document(message.userId!!).collection("chats").document(friendId!!).set(lastMessage)
                     }
 
                     messages.postValue(messagesList)
@@ -263,29 +253,28 @@ class MessagesRepository(val context: Context) {
 
     fun cancelMessagesRegistration(){
 
-        messagesRegistration.remove()
+        messagesRegistration?.remove()
     }
 
     fun listenReceiverChanges(friendId: String){
-        _friendId = friendId
+
 
         friendChangesRegistration =  usersRef.document(friendId).addSnapshotListener { value, _ ->
             if (value != null){
                 _isReceiverAvailable =  value[Constants.FRIEND_AVAILABILITY_KEY] as Boolean
                 isReceiverAvailable.postValue(_isReceiverAvailable)
-                Log.d("Message repository", "/////////// friend is available : $_isReceiverAvailable" )
                 if(value.contains("token")){
                     _friendToken = value["token"] as String
                     friendToken.postValue(_friendToken)
-                    _friendName = value[Constants.USER_NAME_KEY] as String
-                    _friendImageUrl = value["imageUrl"] as String
+                //    _friendName = value[Constants.USER_NAME_KEY] as String
+                 //   _friendImageUrl = value["imageUrl"] as String
                 }
             }
         }
     }
 
     fun cancelFriendChangesRegistration(){
-        friendChangesRegistration.remove()
+        friendChangesRegistration?.remove()
     }
 
 

@@ -57,7 +57,7 @@ class ProfileFragment : Fragment() {
             Glide.with(requireActivity())
                 .load(user.imageUrl)
                 .centerCrop()
-                .placeholder(R.drawable.messenger_logo)
+                .placeholder(R.drawable.profile_picture)
                 .into(binding.profileImageView)
         }
 

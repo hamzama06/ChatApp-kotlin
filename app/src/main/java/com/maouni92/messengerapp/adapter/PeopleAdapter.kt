@@ -27,7 +27,7 @@ class PeopleAdapter(val context: Context, var usersList: ArrayList<User>, val li
         Glide.with(context)
             .load(user.imageUrl)
             .centerCrop()
-            .placeholder(R.drawable.messenger_logo)
+            .placeholder(R.drawable.profile_picture)
             .into(holder.userImage)
     }
 

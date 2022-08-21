@@ -26,12 +26,18 @@ class ChatroomViewModel(application: Application): AndroidViewModel(application)
     fun getAllMessages(friendsId:String) = messagesRepository.getAllMessages(friendsId)
 
 
-    fun sendNewMessage(messageContent:String,userName:String, userImageUrl:String, type:String, recyclerView: RecyclerView){
-        messagesRepository.sendNewMessage(messageContent, userName, userImageUrl, type, recyclerView)
+    fun sendNewMessage(messageContent:String,userName:String,
+                       userImageUrl:String, friendId:String,
+                       friendName:String, friendImageUrl:String,
+                       type:String, recyclerView: RecyclerView){
+        messagesRepository.sendNewMessage(messageContent, userName, userImageUrl, friendId, friendName, friendImageUrl, type, recyclerView)
     }
 
-    fun sendImage(uri: Uri, userName:String, userImageUrl:String, recyclerView: RecyclerView){
-        messagesRepository.sendImage(uri,userName,userImageUrl, recyclerView)
+    fun sendImage(uri: Uri, userName:String,
+                  userImageUrl:String,friendId:String,
+                  friendName:String, friendImageUrl:String,
+                  recyclerView: RecyclerView){
+        messagesRepository.sendImage(uri,userName,userImageUrl,friendId, friendName, friendImageUrl, recyclerView)
     }
 
     fun deleteMessage(itemPosition:Int) = messagesRepository.deleteMessage(itemPosition)

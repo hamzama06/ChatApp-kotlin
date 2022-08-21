@@ -37,7 +37,7 @@ class ChatsAdapter(val context: Context, val chatsList: ArrayList<Message>, val 
      Glide.with(context)
             .load(chatItem.friendImageUrl)
             .centerCrop()
-            .placeholder(R.drawable.messenger_logo)
+            .placeholder(R.drawable.profile_picture)
             .into(holder.userImageView)
 
 

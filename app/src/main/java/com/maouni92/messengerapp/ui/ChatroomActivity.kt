@@ -73,7 +73,7 @@ class ChatroomActivity : BaseActivity(), MessagesAdapter.OnItemLongClickListener
             val message = binding.messageField.text.toString()
 
             if(message.isEmpty()) return@setOnClickListener
-            chatroomViewModel.sendNewMessage(message, userName!!, userImageUrl, MessageType.TEXT, recyclerView)
+            chatroomViewModel.sendNewMessage(message, userName!!, userImageUrl,friendId, friendName, friendImageUrl, MessageType.TEXT, recyclerView)
             binding.messageField.setText("")
         }
 
@@ -101,7 +101,7 @@ class ChatroomActivity : BaseActivity(), MessagesAdapter.OnItemLongClickListener
             Glide.with(this)
                 .load(friendImageUrl)
                 .centerCrop()
-                .placeholder(R.drawable.messenger_logo)
+                .placeholder(R.drawable.profile_picture)
                 .into(binding.toolbarImageProfile)
         }
     }
@@ -116,7 +116,7 @@ class ChatroomActivity : BaseActivity(), MessagesAdapter.OnItemLongClickListener
    }
 
     private val imageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){ uri ->
-        chatroomViewModel.sendImage(uri,userName!!, userImageUrl,recyclerView)
+        chatroomViewModel.sendImage(uri,userName!!, userImageUrl,friendId, friendName, friendImageUrl,recyclerView)
     }
 
     override fun onDestroy() {

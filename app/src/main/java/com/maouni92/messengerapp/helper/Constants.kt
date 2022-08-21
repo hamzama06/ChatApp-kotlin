@@ -19,12 +19,11 @@ object Constants {
     const val FCM_URL = "https://fcm.googleapis.com/fcm/"
     const val CHANNEL_ID = "chat_message"
     const val FRIEND_AVAILABILITY_KEY = "isAvailable"
-    const val MSG_AUTHORIZATION = "authorization"
-    const val REMOTE_MESSAGE_CONTENT_TYPE = "content-type"
+    private const val MSG_AUTHORIZATION = "authorization"
+    private const val REMOTE_MESSAGE_CONTENT_TYPE = "content-type"
 
     const val REMOTE_MESSAGE_DATA = "data"
     const val REMOTE_MESSAGE_REGISTRATION_IDS = "registration_ids"
-    const val SERVER_KEY = "AAAAHCf7Gck:APA91bGi-QR3ZdPbvoI0FQ4o-2DFVmxjiwB3J3rA14XG_B1icLyA-YN7q_OZJtx9snk_D6wOyg5cpCkGS1LikGe42QNvC4bFdSdViQVKut-wjBpCHi-9qMHtS9vSPgB_PKiHWWnu6r1r"
     private var remoteMessageHeaders: HashMap<String, String>? = null
 
     val getRemoteMessageHeader : HashMap<String, String>? get(){
@@ -35,8 +34,8 @@ object Constants {
           }
     return remoteMessageHeaders
     }
-
     const val NOTIFICATIONS_PREFERENCES_KEY = "notifications"
+
     const val MILLISECONDS_IN_DAY = 86400000   // 24 (hours in day) * 3600 (seconds in hour) *  1000 (milliseconds in second)
     const val MILLISECONDS_IN_WEEK = 604800000 // 86400000 * 7 (days in week)
     const val MILLISECONDS_IN_YEAR = 31536000000 // 86400000 * 365 (days in year)

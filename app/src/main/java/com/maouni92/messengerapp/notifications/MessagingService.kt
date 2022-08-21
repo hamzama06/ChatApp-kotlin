@@ -28,13 +28,11 @@ class MessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        Log.d("Messaging service", "//////////////////// message received")
         val pref = Preferences(this)
 
         if (!pref.isNotificationsEnabled()){
             return
         }
-        val notificationId = Random.nextInt()
 
         val title = message.data[Constants.USER_NAME_KEY]
         val messageContent = message.data[Constants.MESSAGE_KEY]
@@ -43,7 +41,6 @@ class MessagingService : FirebaseMessagingService() {
         val userName = message.data[Constants.USER_NAME_KEY]
         val userImageUrl = message.data[Constants.USER_NAME_KEY]
 
-      //  Log.d("Messaging service", "//////////////////// user id : $userId")
 
         val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -66,7 +63,7 @@ class MessagingService : FirebaseMessagingService() {
 
         val pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         val builder = NotificationCompat.Builder(this,Constants.CHANNEL_ID ).apply {
-           setSmallIcon(R.drawable.messenger_logo)
+           setSmallIcon(R.drawable.app_icon)
            setContentTitle(title)
            setContentText(messageContent)
            priority = (NotificationCompat.PRIORITY_DEFAULT)

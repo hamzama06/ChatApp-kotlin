@@ -136,14 +136,14 @@ class MessagesAdapter(val context: Context, val messagesList:ArrayList<Message>,
           Glide.with(context)
               .load(currentMessage.message)
               .centerCrop()
-              .placeholder(R.drawable.messenger_logo)
+              .placeholder(R.drawable.profile_picture)
               .into(messageImageView)
       }
       if (friendProfileImageView != null){
               Glide.with(context)
                   .load(currentMessage.friendImageUrl)
                   .centerCrop()
-                  .placeholder(R.drawable.messenger_logo)
+                  .placeholder(R.drawable.profile_picture)
                   .into(friendProfileImageView)
 
       }
