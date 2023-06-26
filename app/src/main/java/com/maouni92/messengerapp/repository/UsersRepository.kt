@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.collections.ArrayList
 
-class UsersRepository(val context: Context) {
+class UsersRepository(val context:Context) {
 
 
     private var usersList = ArrayList<User>()
@@ -40,7 +40,7 @@ class UsersRepository(val context: Context) {
                     usersList.add(user!!)
                 }
             }
-             users.postValue(usersList)
+            users.postValue(usersList)
 
         }.addOnCompleteListener {
             listener?.onCompleteListener()
@@ -126,4 +126,5 @@ class UsersRepository(val context: Context) {
                 }}
         }
     }
+
 }

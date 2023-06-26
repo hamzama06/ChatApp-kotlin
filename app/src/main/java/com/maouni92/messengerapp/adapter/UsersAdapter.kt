@@ -4,42 +4,44 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.maouni92.messengerapp.R
 import com.maouni92.messengerapp.model.User
 import de.hdodenhof.circleimageview.CircleImageView
 
-class PeopleAdapter(val context: Context, var usersList: ArrayList<User>, val listener: OnItemClickListener) :
-    RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {
+class UsersAdapter(val context: Context, val listener: OnItemClickListener) :
+    ListAdapter<User, UsersAdapter.ViewHolder>(DiffCallback) {
 
+
+  companion object DiffCallback: DiffUtil.ItemCallback<User>(){
+      override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+          return oldItem.id == newItem.id
+      }
+
+      override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+         return oldItem == newItem
+      }
+  }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.people_recycler_item, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-      val user = usersList[position]
+      val user = getItem(position)
 
       holder.name.text = user.name
-        Glide.with(context)
+      Glide.with(context)
             .load(user.imageUrl)
             .centerCrop()
-            .placeholder(R.drawable.profile_picture)
+            .placeholder(R.drawable.ic_person)
             .into(holder.userImage)
     }
 
-    override fun getItemCount(): Int {
-        return usersList.size
-    }
-
-    fun updateData(users:ArrayList<User>){
-        usersList.clear()
-        usersList.addAll(users)
-        notifyDataSetChanged()
-    }
 
    inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
 
@@ -49,14 +51,14 @@ class PeopleAdapter(val context: Context, var usersList: ArrayList<User>, val li
         }
 
         var name: TextView = itemView.findViewById(R.id.people_name_tv)
-        var userImage:CircleImageView = itemView.findViewById(R.id.people_user_image)
+        var userImage = itemView.findViewById<CircleImageView>(R.id.people_user_image)
 
         override fun onClick(p0: View?) {
-           listener.onItemClick(adapterPosition)
+           listener.onItemClick(getItem(adapterPosition))
         }
     }
 
     interface OnItemClickListener{
-        fun onItemClick(itemPosition : Int)
+        fun onItemClick(user : User)
     }
 }

@@ -2,29 +2,55 @@ package com.maouni92.messengerapp.ui.profile
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.AlertDialogLayout
+import androidx.core.view.marginLeft
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import com.maouni92.messengerapp.Preferences
 import com.maouni92.messengerapp.R
 import com.maouni92.messengerapp.databinding.FragmentProfileBinding
 import com.maouni92.messengerapp.helper.ThemeMode
 import com.maouni92.messengerapp.helper.hideKeyboard
+import com.maouni92.messengerapp.model.User
 import com.maouni92.messengerapp.ui.ChangePassword
 import com.maouni92.messengerapp.ui.LoginActivity
 import com.maouni92.messengerapp.ui.MainActivity
+import com.maouni92.messengerapp.viewModel.AuthViewModel
+import java.io.ByteArrayOutputStream
+import java.util.*
+
 
 class ProfileFragment : Fragment() {
-
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
@@ -34,21 +60,18 @@ class ProfileFragment : Fragment() {
 
     private var isNotificationsEnabled = true
     private lateinit var pref: Preferences
-    private var uid = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //    val notificationsViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         pref = Preferences(container!!.context)
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         isNotificationsEnabled = pref.isNotificationsEnabled()
         binding.notificationsSwitch.isChecked = isNotificationsEnabled
-
 
         profileViewModel.getCurrentUser()
 
@@ -95,7 +118,6 @@ class ProfileFragment : Fragment() {
 
         return root
     }
-
 
     private val imageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -166,7 +188,6 @@ class ProfileFragment : Fragment() {
 
     private fun signOut() {
 
-        // auth.signOut()
         profileViewModel.signOut()
         val intent = Intent(this.context, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY

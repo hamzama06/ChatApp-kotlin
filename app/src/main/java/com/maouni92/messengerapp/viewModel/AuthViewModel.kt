@@ -3,8 +3,11 @@ package com.maouni92.messengerapp.viewModel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.maouni92.messengerapp.interfaces.FirebaseListener
 import com.maouni92.messengerapp.repository.AuthenticationRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 

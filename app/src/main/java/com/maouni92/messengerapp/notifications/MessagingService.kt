@@ -18,7 +18,6 @@ import com.maouni92.messengerapp.ui.ChatroomActivity
 import kotlin.random.Random
 
 class MessagingService : FirebaseMessagingService() {
-
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         val pref = Preferences(this)
@@ -54,21 +53,21 @@ class MessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(channel)
         }
 
-     val intent = Intent(this, ChatroomActivity::class.java)
-      //  intent.putExtra(Constants.USER_ID_KEY,userId)
-            intent.putExtra(Constants.FRIEND_ID_KEY,userId)
-            intent.putExtra(Constants.FRIEND_NAME_KEY, userName)
-            intent.putExtra(Constants.FRIEND_IMAGE_KEY, userImageUrl)
+        val intent = Intent(this, ChatroomActivity::class.java)
+        //  intent.putExtra(Constants.USER_ID_KEY,userId)
+        intent.putExtra(Constants.FRIEND_ID_KEY,userId)
+        intent.putExtra(Constants.FRIEND_NAME_KEY, userName)
+        intent.putExtra(Constants.FRIEND_IMAGE_KEY, userImageUrl)
 
 
         val pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         val builder = NotificationCompat.Builder(this,Constants.CHANNEL_ID ).apply {
-           setSmallIcon(R.drawable.app_icon)
-           setContentTitle(title)
-           setContentText(messageContent)
-           priority = (NotificationCompat.PRIORITY_DEFAULT)
-           setContentIntent(pendingIntent)
-           setAutoCancel(true)
+            setSmallIcon(R.drawable.app_icon)
+            setContentTitle(title)
+            setContentText(messageContent)
+            priority = (NotificationCompat.PRIORITY_DEFAULT)
+            setContentIntent(pendingIntent)
+            setAutoCancel(true)
         }
 
 

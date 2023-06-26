@@ -27,12 +27,12 @@ object Constants {
     private var remoteMessageHeaders: HashMap<String, String>? = null
 
     val getRemoteMessageHeader : HashMap<String, String>? get(){
-          if (remoteMessageHeaders == null){
-              remoteMessageHeaders = HashMap()
-              remoteMessageHeaders!![MSG_AUTHORIZATION] = "Key=${BuildConfig.API_KEY}"
-              remoteMessageHeaders!![REMOTE_MESSAGE_CONTENT_TYPE] = "application/json"
-          }
-    return remoteMessageHeaders
+        if (remoteMessageHeaders == null){
+            remoteMessageHeaders = HashMap()
+            remoteMessageHeaders!![MSG_AUTHORIZATION] = "Key=${BuildConfig.API_KEY}"
+            remoteMessageHeaders!![REMOTE_MESSAGE_CONTENT_TYPE] = "application/json"
+        }
+        return remoteMessageHeaders
     }
     const val NOTIFICATIONS_PREFERENCES_KEY = "notifications"
 
@@ -40,6 +40,6 @@ object Constants {
     const val MILLISECONDS_IN_WEEK = 604800000 // 86400000 * 7 (days in week)
     const val MILLISECONDS_IN_YEAR = 31536000000 // 86400000 * 365 (days in year)
 
-
+    const val PAGE_SIZE = 20
 
 }

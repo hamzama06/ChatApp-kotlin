@@ -7,7 +7,7 @@ import com.maouni92.messengerapp.helper.ThemeMode
 
 class Preferences(context: Context) {
 
-   private var sharedPref: SharedPreferences = context.getSharedPreferences(Constants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+   private var sharedPref: SharedPreferences = context.getSharedPreferences("pref", Context.MODE_PRIVATE)
 
 
     fun currentThemeMode():Int{
@@ -23,13 +23,13 @@ class Preferences(context: Context) {
 
     fun setToken(token:String?){
         sharedPref.edit().apply {
-            putString(Constants.FCM_TOKEN_KEY, token)
+            putString("token", token)
             apply()
         }
     }
 
     fun getToken():String?{
-        return sharedPref.getString(Constants.FCM_TOKEN_KEY,"")
+        return sharedPref.getString("token","")
     }
 
     fun enableNotifications(isEnabled:Boolean){

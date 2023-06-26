@@ -54,6 +54,15 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <ProgressBar
+        android:id="@+id/paging_progress"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+         android:layout_gravity="center_horizontal"
+        android:layout_marginVertical="4dp"
+        android:visibility="gone"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatroom_recycler_viw"
         android:layout_width="match_parent"
@@ -63,6 +72,9 @@
         tools:listitem="@layout/messages_recycler_item"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         />
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"

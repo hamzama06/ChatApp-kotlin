@@ -39,7 +39,7 @@ class SignupActivity : AppCompatActivity() {
         }
 
         binding.signupButton.setOnClickListener{
-             checkInputs()
+            checkInputs()
         }
 
 
@@ -49,7 +49,7 @@ class SignupActivity : AppCompatActivity() {
 
         val progressBar = binding.signupProgressBar
 
-       progressBar.visibility = View.VISIBLE
+        progressBar.visibility = View.VISIBLE
 
         signupViewModel.register(name,email,password, object : FirebaseListener{
             override fun onCompleteListener() {

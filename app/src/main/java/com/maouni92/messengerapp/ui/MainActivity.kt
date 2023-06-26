@@ -20,12 +20,10 @@ import com.maouni92.messengerapp.Preferences
 import com.maouni92.messengerapp.R
 
 import com.maouni92.messengerapp.databinding.ActivityMainBinding
-import com.maouni92.messengerapp.helper.FirebaseInstances
 import com.maouni92.messengerapp.helper.ThemeMode
 import com.maouni92.messengerapp.helper.initStatusBar
 
 class MainActivity : BaseActivity() {
-
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var sharedPreferences: Preferences
@@ -60,6 +58,5 @@ class MainActivity : BaseActivity() {
         navView.setupWithNavController(navController)
 
     }
-
 
 }

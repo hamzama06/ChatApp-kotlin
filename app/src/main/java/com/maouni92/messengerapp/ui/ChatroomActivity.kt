@@ -10,64 +10,69 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.maouni92.messengerapp.BaseActivity
 import com.maouni92.messengerapp.R
-import com.maouni92.messengerapp.adapter.MessagesAdapter
+import com.maouni92.messengerapp.adapter.MessageAdapter
 import com.maouni92.messengerapp.databinding.ActivityChatroomBinding
 import com.maouni92.messengerapp.helper.Constants
 import com.maouni92.messengerapp.helper.initStatusBar
 import com.maouni92.messengerapp.model.MessageType
 import com.maouni92.messengerapp.viewModel.ChatroomViewModel
 
+class ChatroomActivity : BaseActivity(), MessageAdapter.OnItemLongClickListener {
 
-class ChatroomActivity : BaseActivity(), MessagesAdapter.OnItemLongClickListener {
+    private lateinit var binding: ActivityChatroomBinding
 
-   private lateinit var binding: ActivityChatroomBinding
+    private val chatroomViewModel: ChatroomViewModel by viewModels()
 
-   private val chatroomViewModel:ChatroomViewModel by viewModels()
-    // private val messagesList = ArrayList<Message>()
     private lateinit var recyclerView: RecyclerView
     private var userId = ""
     private var friendId = ""
     private var friendImageUrl = ""
     private var friendName = ""
-    private var userName:String? = ""
+    private var userName: String? = ""
     private var userImageUrl = ""
     private var friendToken: String? = null
-    private lateinit var messagesAdapter:MessagesAdapter
+    private lateinit var messagesAdapter: MessageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatroomBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-       // initialize status bar
-       initStatusBar()
+        // initialize status bar
+        initStatusBar()
 
-       setSupportActionBar(binding.chatroomToolbar)
-       supportActionBar?.apply {
-           title = ""
-           setDisplayHomeAsUpEnabled(true)
-           setDisplayShowHomeEnabled(true)
-       }
+        setSupportActionBar(binding.chatroomToolbar)
+        supportActionBar?.apply {
+            title = ""
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+
+        messagesAdapter = MessageAdapter(this, this)
 
         initData()
         initRecyclerView()
 
-        chatroomViewModel.currentUser.observe(this){user ->
-             userId = user.id!!
+        chatroomViewModel.currentUser.observe(this) { user ->
+            userId = user.id!!
             userName = user.name
-            userImageUrl = user.imageUrl!! }
-
-
-        chatroomViewModel.isFriendAvailable.observe(this){ isAvailable -> updateAvailabilityText(isAvailable) }
-        chatroomViewModel.friendToken.observe(this){token-> friendToken = token}
-        chatroomViewModel.getAllMessages(friendId)
-
-        chatroomViewModel.messages.observe(this){messages ->
-
-            messagesAdapter =  MessagesAdapter(this,messages,this)
-            recyclerView.adapter = messagesAdapter
+            userImageUrl = user.imageUrl!!
         }
 
+        chatroomViewModel.isFriendAvailable.observe(this) { isAvailable ->
+            updateAvailabilityText(
+                isAvailable
+            )
+        }
+        chatroomViewModel.friendToken.observe(this) { token -> friendToken = token }
+
+
+       chatroomViewModel.getAllMessages(friendId, recyclerView)
+
+            chatroomViewModel.messages.observe(this){messages->
+               messagesAdapter.submitList(messages)
+                recyclerView.adapter = messagesAdapter
+            }
 
         binding.sendMessageButton.setOnClickListener {
             val message = binding.messageField.text.toString()
@@ -77,9 +82,9 @@ class ChatroomActivity : BaseActivity(), MessagesAdapter.OnItemLongClickListener
             binding.messageField.setText("")
         }
 
-       binding.chatroomImagePicker.setOnClickListener {
-           imageLauncher.launch("image/*")
-       }}
+        binding.chatroomImagePicker.setOnClickListener {
+            imageLauncher.launch("image/*")
+        }  }
 
     private fun initRecyclerView(){
         recyclerView = binding.chatroomRecyclerViw
@@ -106,14 +111,14 @@ class ChatroomActivity : BaseActivity(), MessagesAdapter.OnItemLongClickListener
         }
     }
 
-  private fun updateAvailabilityText(isAvailable:Boolean){
-       binding.toolbarFriendAvailability.apply {
-           text = if(isAvailable) context.getString(R.string.online) else context.getString(R.string.offline)
-           setTextColor(
-               if (isAvailable) Color.GREEN else Color.RED
-           )
-       }
-   }
+    private fun updateAvailabilityText(isAvailable:Boolean){
+        binding.toolbarFriendAvailability.apply {
+            text = if(isAvailable) context.getString(R.string.online) else context.getString(R.string.offline)
+            setTextColor(
+                if (isAvailable) Color.GREEN else Color.RED
+            )
+        }
+    }
 
     private val imageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){ uri ->
         chatroomViewModel.sendImage(uri,userName!!, userImageUrl,friendId, friendName, friendImageUrl,recyclerView)
@@ -140,11 +145,11 @@ class ChatroomActivity : BaseActivity(), MessagesAdapter.OnItemLongClickListener
         builder.setPositiveButton(getString(R.string.yes)){ dialog, _ ->
             chatroomViewModel.deleteMessage(itemPosition)
             dialog.dismiss()
-             }
+        }
         builder.setNegativeButton(getString(R.string.no)){ dialog, _ ->
             dialog.dismiss()
         }
-      val alertDialog = builder.create()
+        val alertDialog = builder.create()
         alertDialog.show()
     }
 

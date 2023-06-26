@@ -12,10 +12,10 @@ import com.maouni92.messengerapp.repository.UsersRepository
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
 
- private val authRepository = AuthenticationRepository(application.applicationContext)
- private val usersRepository = UsersRepository(application.applicationContext)
+    private val authRepository = AuthenticationRepository(application.applicationContext)
+    private val usersRepository = UsersRepository(application.applicationContext)
 
- var currentUser = usersRepository.currentUserInfo
+    var currentUser = usersRepository.currentUserInfo
 
     fun getCurrentUser() = usersRepository.getCurrentUser()
 
@@ -32,10 +32,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun signOut() = authRepository.signOut()
-
-
-
-
 
 }
 

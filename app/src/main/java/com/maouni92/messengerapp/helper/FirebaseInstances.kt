@@ -13,9 +13,9 @@ import com.google.firebase.storage.ktx.storage
 
 object FirebaseInstances {
 
-   private val database : FirebaseFirestore get() = Firebase.firestore
-   val usersRef : CollectionReference get() = database.collection(Constants.USERS_COLLECTION_PATH)
-   private val storage: FirebaseStorage get() =  Firebase.storage
-   val storageRef: StorageReference get() =  storage.reference.child(Constants.IMAGES_STORAGE_PATH)
-   val messagesRef : CollectionReference get() = database.collection(Constants.CHATROOM_COLLECTION_PATH)
+    private val database : FirebaseFirestore get() = Firebase.firestore
+    val usersRef : CollectionReference get() = database.collection(Constants.USERS_COLLECTION_PATH)
+    private val storage: FirebaseStorage get() =  Firebase.storage
+    val storageRef: StorageReference get() =  storage.reference.child(Constants.IMAGES_STORAGE_PATH)
+    val messagesRef : CollectionReference get() = database.collection(Constants.CHATROOM_COLLECTION_PATH)
 }

@@ -18,7 +18,7 @@
             android:id="@+id/profile_image_view"
             android:layout_width="136dp"
             android:layout_height="136dp"
-            android:src="@drawable/profile_picture"
+            android:src="@drawable/ic_person"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

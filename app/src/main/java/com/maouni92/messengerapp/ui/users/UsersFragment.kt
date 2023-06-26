@@ -1,4 +1,4 @@
-package com.maouni92.messengerapp.ui.people
+package com.maouni92.messengerapp.ui.users
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,14 +12,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.maouni92.messengerapp.adapter.PeopleAdapter
+import com.maouni92.messengerapp.adapter.UsersAdapter
 import com.maouni92.messengerapp.databinding.FragmentPeopleBinding
 import com.maouni92.messengerapp.helper.Constants
 import com.maouni92.messengerapp.interfaces.FirebaseListener
 import com.maouni92.messengerapp.model.User
 import com.maouni92.messengerapp.ui.ChatroomActivity
 
-class PeopleFragment : Fragment(), PeopleAdapter.OnItemClickListener, FirebaseListener {
+class UsersFragment : Fragment(), UsersAdapter.OnItemClickListener, FirebaseListener {
+
 
     private var _binding: FragmentPeopleBinding? = null
 
@@ -27,12 +28,12 @@ class PeopleFragment : Fragment(), PeopleAdapter.OnItemClickListener, FirebaseLi
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val peopleViewModel:PeopleViewModel by viewModels()
+    private val peopleViewModel:UsersViewModel by viewModels()
 
     private val usersList = ArrayList<User>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private lateinit var adapter: PeopleAdapter
+    private lateinit var adapter: UsersAdapter
 
     override fun onStart() {
         super.onStart()
@@ -51,13 +52,14 @@ class PeopleFragment : Fragment(), PeopleAdapter.OnItemClickListener, FirebaseLi
         progressBar.visibility = View.VISIBLE
         recyclerView = binding.peopleRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        adapter =  PeopleAdapter(requireContext(), usersList, this)
+        adapter =  UsersAdapter(requireContext(), this)
         recyclerView.adapter = adapter
 
 
         peopleViewModel.getUsers(this)
         peopleViewModel.users.observe(viewLifecycleOwner, Observer { users->
-            adapter.updateData(users)
+            adapter.submitList(users)
+            recyclerView.adapter = adapter
         })
 
         return root
@@ -68,23 +70,19 @@ class PeopleFragment : Fragment(), PeopleAdapter.OnItemClickListener, FirebaseLi
         _binding = null
     }
 
-
-    override fun onItemClick(itemPosition: Int) {
-
-        val user = adapter.usersList[itemPosition]
-
-        val intent = Intent(context, ChatroomActivity::class.java)
-        intent.putExtra(Constants.FRIEND_ID_KEY, user.id)
-        intent.putExtra(Constants.FRIEND_IMAGE_KEY, user.imageUrl)
-        intent.putExtra(Constants.FRIEND_NAME_KEY, user.name)
-        startActivity(intent)
-    }
-
     override fun onCompleteListener() {
         progressBar.visibility = View.GONE
     }
 
     override fun onFailureListener() {
         progressBar.visibility = View.GONE
+    }
+
+    override fun onItemClick(user: User) {
+        val intent = Intent(context, ChatroomActivity::class.java)
+        intent.putExtra(Constants.FRIEND_ID_KEY, user.id)
+        intent.putExtra(Constants.FRIEND_IMAGE_KEY, user.imageUrl)
+        intent.putExtra(Constants.FRIEND_NAME_KEY, user.name)
+        startActivity(intent)
     }
 }

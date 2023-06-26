@@ -65,6 +65,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0'
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.13.0'
@@ -72,5 +73,9 @@ dependencies {
     ////// retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+
+    // paging
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
+    testImplementation "androidx.paging:paging-common-ktx:3.1.1"
 
 }

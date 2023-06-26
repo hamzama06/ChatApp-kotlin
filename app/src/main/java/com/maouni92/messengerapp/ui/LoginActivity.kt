@@ -12,12 +12,10 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.maouni92.messengerapp.databinding.ActivityLoginBinding
-import com.maouni92.messengerapp.helper.FirebaseInstances
 import com.maouni92.messengerapp.interfaces.FirebaseListener
 import com.maouni92.messengerapp.viewModel.AuthViewModel
 
 class LoginActivity : AppCompatActivity() {
-
 
     private lateinit var binding: ActivityLoginBinding
     private val loginViewModel:AuthViewModel by viewModels()
@@ -48,13 +46,13 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-     binding.newAccountButton.setOnClickListener{
-          navigateTo(SignupActivity::class.java)
-       }
+        binding.newAccountButton.setOnClickListener{
+            navigateTo(SignupActivity::class.java)
+        }
 
-      binding.loginButton.setOnClickListener{
-       login()
-      }
+        binding.loginButton.setOnClickListener{
+            login()
+        }
 
 
     }
@@ -80,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }
-           override fun onFailureListener() {
+                override fun onFailureListener() {
                     Log.d("Login Activity", "/////////// inside login activity login: login failed " )
                     progressBar.visibility = View.GONE
                 }
@@ -88,5 +86,4 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
-
 }

@@ -5,6 +5,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
+
+
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -52,7 +54,7 @@
         android:layout_height="36dp"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
-        android:src="@drawable/profile_picture" />
+        android:src="@drawable/ic_person" />
 
     <TextView
         android:id="@+id/rec_message_body_tv"
@@ -97,7 +99,7 @@
         android:layout_alignParentRight="true"
         android:padding="8dp"
         android:textColor="@color/white"
-        android:src="@drawable/profile_picture" />
+        android:src="@drawable/ic_person" />
 
     <TextView
         android:id="@+id/message_image_time_tv"
@@ -125,7 +127,7 @@
         android:layout_height="36dp"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
-        android:src="@drawable/profile_picture" />
+        android:src="@drawable/ic_person" />
 
     <ImageView
         android:id="@+id/rec_message_image"
@@ -136,7 +138,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:src="@drawable/profile_picture"
+        android:src="@drawable/ic_person"
         android:layout_toRightOf="@id/rec_message_img_user_image"
         android:background="@drawable/rec_msg_background"
         android:padding="8dp"
